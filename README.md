@@ -22,7 +22,7 @@ Azure Functions
 
 | Implementacón         | Video | Código |
 | ------------- | ------------- | ---------- |
-| [IoTHub](https://github.com/marcolo-30/Sistemas-Embebidos-Proyecto-final/blob/main/internet.py)  | [IoTHub](https://www.youtube.com/watch?v=KwvavcBm5tE) | [Simulacion RPI](https://github.com/marcolo-30/Sistemas-Embebidos-Proyecto-final/blob/main/internet.py) |
+| [IoTHub](https://github.com/marcolo-30/Sistemas-Embebidos-Proyecto-final/blob/main/internet.py)  | [IoTHub](https://www.youtube.com/watch?v=KwvavcBm5tE) | [Simulacion RPI](https://github.com/marcolo-30/Reto-Azure/blob/main/IoTEdge%20en%20maquina%20Windows) |
 
 3. Enrutar los mensajes desde el IoT Hub hasta un servicio de almacenamiento. Puede utilizar Azure Functions y Table storage.
 
