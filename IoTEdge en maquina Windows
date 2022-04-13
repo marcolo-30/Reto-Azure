@@ -1,0 +1,25 @@
+Implementación de IoT Edge en maquina local. 
+Comandos utilizados para la creación de las herramientas:
+
+az group create --name IoTInnovati --location eastus                                                               ## Creación de un grupo de recursos del proyecto 
+
+az iot hub create --resource-group IoTInnovati --name InnovatiIoThub --sku F1 --partition-count 2                  ## Creación del IoTHub
+
+az iot hub device-identity create --device-id DispositivoEdge --edge-enabled --hub-name InnovatiIoThub             ## Creación del IoT Edge.
+
+az iot hub device-identity list --hub-name InnovatiIoThub                                                          ## Enlista los dispositivos registrados en el IoT Hub
+
+az iot hub device-identity connection-string show --device-id myEdgeDevice --hub-name {hub_name}          ## Muestra la clave de conexión del dispositivo para el  IoTHub
+
+
+En la maquina local 
+Comandos utilizados para la implementación del IoTEdge en la maquina Windows
+
+
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V -All                                   ## Habilitar HyperV para montar maquinas virtuales en windows
+
+Start-Process -Wait msiexec -ArgumentList "/i","$([io.Path]::Combine($env:TEMP, 'AzureIoTEdge.msi'))","/qn" ## Descarga de IoT Edge para linux en Windows.
+
+Deploy-Eflow                                                                                            ## Implementacion de la maquina virtual en maquina local Windows
+
+Provision-EflowVm -provisioningType ManualConnectionString -devConnString "<CONNECTION_STRING_HERE>"        ## Autenticación de maquina con el IoT Hub
