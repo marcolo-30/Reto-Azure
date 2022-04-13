@@ -30,5 +30,7 @@ Propuesta de solución:
 
 La configuración de la función de azure se realiza con la plantilla del event hub trigger, la cual cuando se recibe cualquier mensaje en el IoTHub se activa y ejecuta la función. Esta puede ser implementada adjuntando la URL de la tabla creada "https://innovatihubstorage.table.core.windows.net/Sensordata" para que se pueda almacenar la informacion de los mensajes recibidos. 
 
+Referencia de ejecución de la función https://sibeeshpassion.com/iothubtrigger-azure-function-and-azure-iot-hub/#iothubtrigger-demo
+
 
 
