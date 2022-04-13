@@ -16,7 +16,7 @@ Azure Functions
 
 | Código        | Video |
 | ------------- | ------------- |
-| [IoTEdge](https://github.com/marcolo-30/Sistemas-Embebidos-Proyecto-final/blob/main/internet.py)  | [IoTEdge](https://youtu.be/bbl9TvLVg7Q) |
+| [IoTEdge](https://github.com/marcolo-30/Reto-Azure/blob/main/IoTEdge%20en%20maquina%20Windows)  | [IoTEdge](https://youtu.be/bbl9TvLVg7Q) |
 
 2. Enviar la data (Device to cloud/D2C) de los sensores a cada dispositivo registrado en el IoT Hub. Deberá existir un dispositivo por cada sensor.
 
