@@ -18,11 +18,15 @@ Azure Functions
 | ------------- | ------------- |
 | [IoTEdge](https://github.com/marcolo-30/Reto-Azure/blob/main/IoTEdge%20en%20maquina%20Windows)  | [IoTEdge](https://youtu.be/bbl9TvLVg7Q) |
 
+Referencia https://docs.microsoft.com/en-us/windows/iot/iot-enterprise/azure-iot-edge-for-linux-on-windows
+
 2. Enviar la data (Device to cloud/D2C) de los sensores a cada dispositivo registrado en el IoT Hub. Deberá existir un dispositivo por cada sensor.
 
 | Implementacón         | Video | Código |
 | ------------- | ------------- | ---------- |
 | [IoTHub](https://github.com/marcolo-30/Reto-Azure/blob/main/D2C_IotHub)  | [IoTHub](https://www.youtube.com/watch?v=KwvavcBm5tE) | [Simulacion RPI](https://github.com/marcolo-30/Reto-Azure/blob/main/RPI_data_SampleCode) |
+
+Referencia applicativo https://azure-samples.github.io/raspberry-pi-web-simulator/?lang=es
 
 3. Enrutar los mensajes desde el IoT Hub hasta un servicio de almacenamiento. Puede utilizar Azure Functions y Table storage.
 
