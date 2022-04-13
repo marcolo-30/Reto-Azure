@@ -1,2 +1,13 @@
 # Comandos Implementación dispositivos IoT.
 
+az group create --name IoTInnovati --location eastus                                                               ## Creación de un grupo de recursos del proyecto 
+
+az iot hub create --resource-group IoTInnovati --name InnovatiIoThub --sku F1 --partition-count 2                  ## Creación del IoTHub
+
+az iot hub device-identity create --device-id Sensor-humedad --hub-name InnovatiIoThub                              ## Creación de los dispositivos sensores temperatura y humedad
+az iot hub device-identity create --device-id Sensor-temperatura --hub-name InnovatiIoThub 
+
+az iot hub device-identity connection-string show --device-id Sensor-temperatura --hub-name InnovatiIoThub           ## Muestra la clave de conexión de los dispositivo para conectarlos con el IoTHub
+az iot hub device-identity connection-string show --device-id Sensor-humedad --hub-name InnovatiIoThub  
+
+El codigo implementado en los dispositivos se encuentra en RPI_data_SampleCode
