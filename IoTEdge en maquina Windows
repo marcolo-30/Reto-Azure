@@ -9,7 +9,7 @@ az iot hub device-identity create --device-id DispositivoEdge --edge-enabled --h
 
 az iot hub device-identity list --hub-name InnovatiIoThub                                                          ## Enlista los dispositivos registrados en el IoT Hub
 
-az iot hub device-identity connection-string show --device-id myEdgeDevice --hub-name {hub_name}          ## Muestra la clave de conexión del dispositivo para el  IoTHub
+az iot hub device-identity connection-string show --device-id myEdgeDevice --hub-name InnovatiIoThub           ## Muestra la clave de conexión del dispositivo para el  IoTHub
 
 
 En la maquina local 
