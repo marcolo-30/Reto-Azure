@@ -1,0 +1,252 @@
+/*
+* IoT Hub Raspberry Pi NodeJS - Microsoft Sample Code - Copyright (c) 2017 - Licensed MIT
+* Simulación sensor Humedad
+*/                                                                                      # Definicion de constantes 
+const wpi = require('wiring-pi');                                                       # wiring-pi es una libreria de RPI para el manejo de GPIOs y el dispositivo en general
+const Client = require('azure-iot-device').Client;                                      # declaracion de cliente, mensaje y prtocolo de conexion con Azure
+const Message = require('azure-iot-device').Message;                                    # BME280 libreria para manejo del sensor de Temperatura, Humedad, Presión.
+const Protocol = require('azure-iot-device-mqtt').Mqtt;
+const BME280 = require('bme280-sensor');
+
+const BME280_OPTION = {
+  i2cBusNo: 1, // defaults to 1                                                         # I2C protocolo de comunicación de sensores hacia RPI
+  i2cAddress: BME280.BME280_DEFAULT_I2C_ADDRESS() // defaults to 0x77                   # Direccion de conexión del sensor 
+};
+
+const connectionString = 'HostName=InnovatiIoThub.azure-devices.net;DeviceId=Sensor-humedad;SharedAccessKey=XXXXXXXXX'; #declaración de string de conexion del dispositivo con Azure.
+const LEDPin = 4;                                                                        # Definicion de GPIO para el pin en la RPI
+
+var sendingMessage = false;                                                              # variables de inicio. 
+var messageId = 0;
+var client, sensor;
+var blinkLEDTimeout = null;
+
+function getMessage(cb) {                                                                # Función de captura de información o mensajes. 
+  messageId++;
+  sensor.readSensorData()
+    .then(function (data) {
+      cb(JSON.stringify({
+        messageId: messageId,
+        deviceId: 'Raspberry Pi humidity sensor',
+        humidity: data.humidity
+      }), data.temperature_C > 30);
+    })
+    .catch(function (err) {
+      console.error('Failed to read out sensor data: ' + err);
+    });
+}
+
+function sendMessage() {                                                                   # Función de envio de mensajes de RPI al IoT Hub
+  if (!sendingMessage) { return; }
+
+  getMessage(function (content, temperatureAlert) {
+    var message = new Message(content);
+    console.log('Sending message: ' + content);
+    client.sendEvent(message, function (err) {
+      if (err) {
+        console.error('Failed to send message to Azure IoT Hub');
+      } else {
+        blinkLED();
+        console.log('Message sent to Azure IoT Hub');
+      }
+    });
+  });
+}
+
+function onStart(request, response) {                                                     #Función de inicio de conexion para envio de mensajes. 
+  console.log('Try to invoke method start(' + request.payload + ')');
+  sendingMessage = true;
+
+  response.send(200, 'Successully start sending message to cloud', function (err) {
+    if (err) {
+      console.error('[IoT hub Client] Failed sending a method response:\n' + err.message);
+    }
+  });
+}
+
+function onStop(request, response) {                                                        #Función de parada de conexion para envio de mensajes. 
+  console.log('Try to invoke method stop(' + request.payload + ')');
+  sendingMessage = false;
+
+  response.send(200, 'Successully stop sending message to cloud', function (err) {
+    if (err) {
+      console.error('[IoT hub Client] Failed sending a method response:\n' + err.message);
+    }
+  });
+}
+
+function receiveMessageCallback(msg) {                                                     #Función de retorno de que fue recibido el mensaje prendiendoel led
+  blinkLED();
+  var message = msg.getData().toString('utf-8');
+  client.complete(msg, function () {
+    console.log('Receive message: ' + message);
+  });
+}
+
+function blinkLED() {                                                                     #Función de encendido de led con retardo habilitando y deshabilitando un PIN.
+  // Light up LED for 500 ms
+  if(blinkLEDTimeout) {
+       clearTimeout(blinkLEDTimeout);
+   }
+  wpi.digitalWrite(LEDPin, 1);             
+  blinkLEDTimeout = setTimeout(function () {
+    wpi.digitalWrite(LEDPin, 0);
+  }, 500);
+}
+
+// set up wiring
+wpi.setup('wpi');                                                                              # Configuración de la libreria Wiring pi para el manejo de GPIOs de la RPI
+wpi.pinMode(LEDPin, wpi.OUTPUT);
+sensor = new BME280(BME280_OPTION);
+sensor.init()
+  .then(function () {
+    sendingMessage = true;
+  })
+  .catch(function (err) {
+    console.error(err.message || err);
+  });
+
+// create a client                                                                  #creacion del cliente de comunicacion hacia el servidor en cloud. 
+client = Client.fromConnectionString(connectionString, Protocol);
+
+client.open(function (err) {
+  if (err) {
+    console.error('[IoT hub Client] Connect error: ' + err.message);
+    return;
+  }
+
+  // set C2D and device method callback
+  client.onDeviceMethod('start', onStart);
+  client.onDeviceMethod('stop', onStop);
+  client.on('message', receiveMessageCallback);
+  setInterval(sendMessage, 2000);
+});
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+
+/*
+* IoT Hub Raspberry Pi NodeJS - Microsoft Sample Code - Copyright (c) 2017 - Licensed MIT
+* Simulación sensor Temperatura
+*/
+
+const wpi = require('wiring-pi');
+const Client = require('azure-iot-device').Client;
+const Message = require('azure-iot-device').Message;
+const Protocol = require('azure-iot-device-mqtt').Mqtt;
+const BME280 = require('bme280-sensor');
+
+const BME280_OPTION = {
+  i2cBusNo: 1, // defaults to 1
+  i2cAddress: BME280.BME280_DEFAULT_I2C_ADDRESS() // defaults to 0x77
+};
+
+const connectionString = 'HostName=InnovatiIoThub.azure-devices.net;DeviceId=Sensor-Temperatura;SharedAccessKey=XXXXXXXXXX';
+const LEDPin = 4;
+
+var sendingMessage = false;
+var messageId = 0;
+var client, sensor;
+var blinkLEDTimeout = null;
+
+function getMessage(cb) {
+  messageId++;
+  sensor.readSensorData()
+    .then(function (data) {
+      cb(JSON.stringify({
+        messageId: messageId,
+        deviceId: 'Raspberry Pi temperature sensor',
+        temperature: data.temperature_C
+      }), data.temperature_C > 30);
+    })
+    .catch(function (err) {
+      console.error('Failed to read out sensor data: ' + err);
+    });
+}
+
+function sendMessage() {
+  if (!sendingMessage) { return; }
+
+  getMessage(function (content, temperatureAlert) {
+    var message = new Message(content);
+    message.properties.add('temperatureAlert', temperatureAlert.toString());
+    console.log('Sending message: ' + content);
+    client.sendEvent(message, function (err) {
+      if (err) {
+        console.error('Failed to send message to Azure IoT Hub');
+      } else {
+        blinkLED();
+        console.log('Message sent to Azure IoT Hub');
+      }
+    });
+  });
+}
+
+function onStart(request, response) {
+  console.log('Try to invoke method start(' + request.payload + ')');
+  sendingMessage = true;
+
+  response.send(200, 'Successully start sending message to cloud', function (err) {
+    if (err) {
+      console.error('[IoT hub Client] Failed sending a method response:\n' + err.message);
+    }
+  });
+}
+
+function onStop(request, response) {
+  console.log('Try to invoke method stop(' + request.payload + ')');
+  sendingMessage = false;
+
+  response.send(200, 'Successully stop sending message to cloud', function (err) {
+    if (err) {
+      console.error('[IoT hub Client] Failed sending a method response:\n' + err.message);
+    }
+  });
+}
+
+function receiveMessageCallback(msg) {
+  blinkLED();
+  var message = msg.getData().toString('utf-8');
+  client.complete(msg, function () {
+    console.log('Receive message: ' + message);
+  });
+}
+
+function blinkLED() {
+  // Light up LED for 500 ms
+  if(blinkLEDTimeout) {
+       clearTimeout(blinkLEDTimeout);
+   }
+  wpi.digitalWrite(LEDPin, 1);
+  blinkLEDTimeout = setTimeout(function () {
+    wpi.digitalWrite(LEDPin, 0);
+  }, 500);
+}
+
+// set up wiring
+wpi.setup('wpi');
+wpi.pinMode(LEDPin, wpi.OUTPUT);
+sensor = new BME280(BME280_OPTION);
+sensor.init()
+  .then(function () {
+    sendingMessage = true;
+  })
+  .catch(function (err) {
+    console.error(err.message || err);
+  });
+
+// create a client
+client = Client.fromConnectionString(connectionString, Protocol);
+
+client.open(function (err) {
+  if (err) {
+    console.error('[IoT hub Client] Connect error: ' + err.message);
+    return;
+  }
+
+  // set C2D and device method callback
+  client.onDeviceMethod('start', onStart);
+  client.onDeviceMethod('stop', onStop);
+  client.on('message', receiveMessageCallback);
+  setInterval(sendMessage, 2000);
+});
