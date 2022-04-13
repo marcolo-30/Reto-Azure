@@ -26,8 +26,9 @@ Azure Functions
 
 3. Enrutar los mensajes desde el IoT Hub hasta un servicio de almacenamiento. Puede utilizar Azure Functions y Table storage.
 
+Propuesta de solución:
 
-
+La configuración de la función de azure se realiza con la plantilla del event hub trigger, la cual cuando se recibe cualquier mensaje en el IoTHub se activa y ejecuta la función. Esta puede ser implementada adjuntando la URL de la tabla creada "https://innovatihubstorage.table.core.windows.net/Sensordata" para que se pueda almacenar la informacion de los mensajes recibidos. 
 
 
 
